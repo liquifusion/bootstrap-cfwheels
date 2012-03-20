@@ -1,6 +1,6 @@
 # Bootstrap CFWheels Plugin
 
-Experimental plugin that adds an API for working with Twitter Bootstrap.
+Experimental plugin that adds an API for working with [Twitter Bootstrap][1].
 
 ## Setup
 
@@ -24,28 +24,38 @@ pretty darn opinionated on how the markup should work anyway.
 
 This is a list of methods available. So far, I've mainly been focusing on "horizontal" forms.
 
+All methods have their "usual" arguments from the Wheels API, but additional arguments are listed below along with the
+method names.
+
 ### Object Form Helpers
 
-These form helpers also place error messages in-line using `errorMessageOn`.
+  * `hStartFormTag()`
+  * `hFileField([ string helpBlock ])`
+  * `hSelect([ string helpBlock ])`
+  * `hTextField([ string helpBlock ])`
+  * `hTextArea([ string helpBlock ])`
+  * `hPasswordField([ string helpBlock ])`
+  * `hUneditableTextField(string label, string value [, string class ])`
 
-  * `hStartFormTag`
-  * `hFileField`
-  * `hSelect`
-  * `hTextField`
-  * `hTextArea`
-  * `hPasswordField`
-  * `hUneditableTextField`
+These form helpers also place error messages in-line using `errorMessageOn` and Bootstrap.
 
 ### Other Form Helpers
 
-  * `bSubmitTag`
+  * `bSubmitTag([ string class, boolean isPrimary ])`
 
 ### View Helpers
 
-  * `bFlashMessages`
+  * `bFlashMessages()`
 
 ## Dependencies
 
-You must install the [Nested errorMessageOn][1] plugin for this plugin to work.
+You must install the [Nested errorMessageOn][2] plugin for this plugin to work.
 
-[1]: https://github.com/liquifusion/cfwheels-nested-errorMessageOn
+## Contributors
+
+Created by [Chris Peters][4] with support from [Liquifusion Studios][2].
+
+[1]: http://twitter.github.com/bootstrap/
+[2]: https://github.com/liquifusion/cfwheels-nested-errorMessageOn
+[3]: http://cfwheels.org/user/profile/1
+[4]: http://liquifusion.com/

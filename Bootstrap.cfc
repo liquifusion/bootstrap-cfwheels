@@ -71,6 +71,15 @@
 		</cfscript>
 		<cfreturn textFieldTag(argumentCollection=arguments)>
 	</cffunction>
+	
+	<cffunction name="bPasswordFieldTag" returntype="string" hint="Bootstrap markup version of the standard Wheels `textFieldTag` form helper.">
+		<cfscript>
+			var loc = {
+				formFieldArgs=$bootstrapFormFieldArgs(arguments)
+			};
+		</cfscript>
+		<cfreturn passwordFieldTag(argumentCollection=arguments)>
+	</cffunction>
 
 	<cffunction name="hStartFormTag" returntype="string" hint="Bootstrap markup version of the Wheels `startFormTag` form helper, except with the `form-horizontal` class applied for you.">
 		<cfargument name="class" type="string" required="false" default="" hint="Space-delimited list of classes to apply to the form tag.">

@@ -268,11 +268,13 @@
 			if (!StructKeyExists(arguments.fieldArgs, "labelClass"))
 				arguments.fieldArgs.labelClass = "";
 
+			if (!StructKeyExists(arguments.fieldArgs, "class"))
+				arguments.fieldArgs.class = "";
+
+			arguments.fieldArgs.class = ListAppend(arguments.fieldArgs.class, "form-control", " ");
 			arguments.fieldArgs.labelPlacement = "before";
-			arguments.fieldArgs.labelClass = ListAppend(arguments.fieldArgs.labelClass, "control-label", " ");
-			arguments.fieldArgs.prepend = '<div class="controls">';
-			arguments.fieldArgs.prependToLabel = '<div class="control-group">';
-			arguments.fieldArgs.append = '</div></div>';
+			arguments.fieldArgs.prependToLabel = '<div class="form-group">';
+			arguments.fieldArgs.append = '</div>';
 			arguments.fieldArgs.errorElement = "";
 			arguments.fieldArgs.errorClass = "";
 

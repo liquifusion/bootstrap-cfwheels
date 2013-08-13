@@ -99,18 +99,14 @@
 
 			loc.field = checkBox(
 				argumentCollection=arguments,
-				labelPlacement="around",
-				labelClass="checkbox"
+				labelPlacement="around"
 			);
 
 			loc.hasErrors = Evaluate($objectName(argumentCollection=arguments)).hasErrors(arguments.property);
 
 			loc.field =
-				'<div class="control-group #loc.hasErrors ? 'error': ''#">
-					<label class="control-label"></label>
-					<div class="controls">
-						#loc.field#
-					</div>
+				'<div class="checkbox #loc.hasErrors ? 'has-error': ''#">
+					#loc.field#
 				</div>';
 		</cfscript>
 		<cfreturn loc.field>
@@ -198,14 +194,13 @@
 				flashMessages=""
 			};
 
-			if (flashCount())
-			{
-				for (loc.i = 1; loc.i <= flashCount(); loc.i++)
-				{
+			if (flashCount()) {
+				for (loc.i = 1; loc.i <= flashCount(); loc.i++) {
 					loc.flashKey = ListGetAt(loc.flashKeyList, loc.i);
+					loc.flashClass = loc.flashKey == "error" ? "danger" : loc.flashKey;
 
 					loc.flashMessages &=
-						'<div class="alert alert-#LCase(loc.flashKey)# fade in">
+						'<div class="alert alert-#LCase(loc.flashClass)#">
 							<a class="close" data-dismiss="alert" href="##" title="Dismiss">&times;</a>
 							#h(flash(loc.flashKey))#
 						</div>';
@@ -265,14 +260,17 @@
 		<cfscript>
 			var loc = {};
 
-			if (!StructKeyExists(arguments.fieldArgs, "labelClass"))
+			if (!StructKeyExists(arguments.fieldArgs, "labelClass")) {
 				arguments.fieldArgs.labelClass = "";
+			}
 
-			if (!StructKeyExists(arguments.fieldArgs, "class"))
+			if (!StructKeyExists(arguments.fieldArgs, "class")) {
 				arguments.fieldArgs.class = "";
+			}
 
 			arguments.fieldArgs.class = ListAppend(arguments.fieldArgs.class, "form-control", " ");
 			arguments.fieldArgs.labelPlacement = "before";
+			arguments.fieldArgs.labelClass = ListAppend(arguments.fieldArgs.labelClass, "control-label", " ");
 			arguments.fieldArgs.prependToLabel = '<div class="form-group">';
 			arguments.fieldArgs.append = '</div>';
 			arguments.fieldArgs.errorElement = "";
@@ -282,26 +280,27 @@
 			loc.hasPrependedText = StructKeyExists(arguments.fieldArgs, "prependedText") && Len(arguments.fieldArgs.prependedText);
 			loc.hasAppendedText = StructKeyExists(arguments.fieldArgs, "appendedText") && Len(arguments.fieldArgs.appendedText);
 
-			if (loc.hasPrependedText || loc.hasAppendedText)
-			{
+			if (loc.hasPrependedText || loc.hasAppendedText) {
 				loc.prependClass = loc.hasPrependedText ? 'input-prepend' : '';
 				loc.appendClass = loc.hasAppendedText ? 'input-append' : '';
 				arguments.fieldArgs.prepend &= '<div class="#loc.prependClass# #loc.appendClass#">';
 				arguments.fieldArgs.append = '</div>' & arguments.fieldArgs.append;
 
-				if (loc.hasPrependedText)
+				if (loc.hasPrependedText) {
 					arguments.fieldArgs.prepend &= '<span class="add-on">#arguments.fieldArgs.prependedText#</span>';
+				}
 
-				if (loc.hasAppendedText)
+				if (loc.hasAppendedText) {
 					arguments.fieldArgs.append =
 						'<span class="add-on">#arguments.fieldArgs.appendedText#</span>'
 						& arguments.fieldArgs.append;
+				}
 			}
 
 			// Help block
-			if (StructKeyExists(arguments.fieldArgs, "helpBlock") && Len(arguments.fieldArgs.helpBlock))
-				arguments.fieldArgs.append = '<p class="help-block">#arguments.fieldArgs.helpBlock#</p>'
-					& arguments.fieldArgs.append;
+			if (StructKeyExists(arguments.fieldArgs, "helpBlock") && Len(arguments.fieldArgs.helpBlock)) {
+				arguments.fieldArgs.append = '<span class="help-block">#arguments.fieldArgs.helpBlock#</span>' & arguments.fieldArgs.append;
+			}
 
 			// Remove arguments that will cause extra HTML attributes to be added
 			StructDelete(arguments.fieldArgs, "helpBlock");
@@ -324,20 +323,21 @@
 				objectName=arguments.fieldArgs.objectName,
 				property=arguments.fieldArgs.property,
 				wrapperElement="span",
-				class="help-inline"
+				class="help-block"
 			};
-			if (StructKeyExists(arguments.fieldArgs, "association"))
+			if (StructKeyExists(arguments.fieldArgs, "association")) {
 				loc.errorMessageOnArgs.association = arguments.fieldArgs.association;
-			if (StructKeyExists(arguments.fieldArgs, "position"))
+			}
+			if (StructKeyExists(arguments.fieldArgs, "position")) {
 				loc.errorMessageOnArgs.position = arguments.fieldArgs.position;
+			}
 
 			// Error message
-			if (Evaluate($objectName(argumentCollection=arguments.fieldArgs)).hasErrors(arguments.fieldArgs.property))
-			{
+			if (Evaluate($objectName(argumentCollection=arguments.fieldArgs)).hasErrors(arguments.fieldArgs.property)) {
 				arguments.fieldArgs.prependToLabel = Replace(
 					arguments.fieldArgs.prependToLabel,
-					'<div class="control-group">',
-					'<div class="control-group error">'
+					'<div class="form-group">',
+					'<div class="form-group has-error">'
 				);
 
 				arguments.fieldArgs.append =

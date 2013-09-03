@@ -24,6 +24,7 @@ These form helpers also place error messages in-line using `errorMessageOn` and 
 
   * `bSelectTag()`
   * `bTextFieldTag()`
+  * `bPasswordFieldTag()`
 
 ### Other Form Helpers
 

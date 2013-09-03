@@ -62,6 +62,15 @@
 		<cfreturn loc.submitTag>
 	</cffunction>
 
+	<cffunction name="bPasswordFieldTag" returntype="string" hint="Bootstrap markup version of the standard CFWheels `passwordFieldTag` form helper.">
+		<cfscript>
+			var loc = {
+				formFieldArgs=$bootstrapFormFieldArgs(arguments)
+			};
+		</cfscript>
+		<cfreturn passwordFieldTag(argumentCollection=arguments)>
+	</cffunction>
+
 	<cffunction name="bTextFieldTag" returntype="string" hint="Bootstrap markup version of the standard Wheels `textFieldTag` form helper.">
 		<cfscript>
 			var loc = {
@@ -119,6 +128,38 @@
 			};
 		</cfscript>
 		<cfreturn fileField(argumentCollection=loc.formFieldArgs)>
+	</cffunction>
+
+	<cffunction name="bHasManyCheckBox" returntype="string" access="public" output="false" hint="Bootstrap version of the Wheels `hasManyCheckBox` form helper.">
+		<cfscript>
+			var loc = {};
+			$args(name="hasManyCheckBox", args=arguments);
+			loc.checked = true;
+			loc.returnValue = "";
+			loc.included = includedInObject(argumentCollection=arguments);
+
+			if (!loc.included)
+			{
+				loc.included = "";
+				loc.checked = false;
+			}
+
+			loc.tagId = "#arguments.objectName#-#arguments.association#-#Replace(arguments.keys, ",", "-", "all")#-_delete";
+			loc.tagName = "#arguments.objectName#[#arguments.association#][#arguments.keys#][_delete]";
+
+			// Override starts here
+			StructDelete(arguments, "keys", false);
+			StructDelete(arguments, "objectName", false);
+			StructDelete(arguments, "association", false);
+
+			loc.field = checkBoxTag(name=loc.tagName, id=loc.tagId, value=0, checked=loc.checked, uncheckedValue=1, argumentCollection=arguments);
+
+			loc.field =
+				'<div class="checkbox">
+					#loc.field#
+				</div>';
+		</cfscript>
+		<cfreturn loc.field>
 	</cffunction>
 
 	<cffunction name="bPasswordField" returntype="string" hint="Bootstrap markup version of the Wheels `passwordField` form helper.">
@@ -260,21 +301,22 @@
 		<cfscript>
 			var loc = {};
 
-			if (!StructKeyExists(arguments.fieldArgs, "labelClass")) {
-				arguments.fieldArgs.labelClass = "";
-			}
-
-			if (!StructKeyExists(arguments.fieldArgs, "class")) {
-				arguments.fieldArgs.class = "";
-			}
+			param name="arguments.fieldArgs.labelClass" type="string" default="";
+			param name="arguments.fieldArgs.class" type="string" default="";
+			param name="arguments.fieldArgs.groupClass" type="string" default="col-md-6";
 
 			arguments.fieldArgs.class = ListAppend(arguments.fieldArgs.class, "form-control", " ");
 			arguments.fieldArgs.labelPlacement = "before";
 			arguments.fieldArgs.labelClass = ListAppend(arguments.fieldArgs.labelClass, "control-label", " ");
-			arguments.fieldArgs.prependToLabel = '<div class="form-group">';
-			arguments.fieldArgs.append = '</div>';
+			arguments.fieldArgs.prependToLabel = '<div class="row"><div class="form-group">';
+			arguments.fieldArgs.append = '</div></div>';
 			arguments.fieldArgs.errorElement = "";
 			arguments.fieldArgs.errorClass = "";
+
+			// Add group class
+			if (Len(arguments.fieldArgs.groupClass)) {
+				arguments.fieldArgs.prependToLabel = Replace(arguments.fieldArgs.prependToLabel, "form-group", "form-group #h(arguments.fieldArgs.groupClass)#");
+			}
 
 			// Prepend/appended text
 			loc.hasPrependedText = StructKeyExists(arguments.fieldArgs, "prependedText") && Len(arguments.fieldArgs.prependedText);

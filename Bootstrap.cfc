@@ -238,7 +238,17 @@
 			if (flashCount()) {
 				for (loc.i = 1; loc.i <= flashCount(); loc.i++) {
 					loc.flashKey = ListGetAt(loc.flashKeyList, loc.i);
-					loc.flashClass = loc.flashKey == "error" ? "danger" : loc.flashKey;
+
+					switch (loc.flashKey) {
+						case "error":
+							loc.flashClass = "danger";
+							break;
+						case "notice":
+							loc.flashClass = "warning";
+							break;
+						default:
+							loc.flashClass = loc.flashKey;
+					}
 
 					loc.flashMessages &=
 						'<div class="alert alert-#LCase(loc.flashClass)#">

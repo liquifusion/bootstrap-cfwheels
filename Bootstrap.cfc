@@ -45,18 +45,19 @@
 		<cfargument name="isPrimary" type="boolean" required="false" default="false" hint="Whether or not to apply the `btn-primary` style to the button.">
 		<cfscript>
 			var loc = {
-				coreSubmitTag=core.submitTag,
 				class=ListAppend(arguments.class, "btn", " "),
 				isPrimary=arguments.isPrimary
 			};
+			
+			var coreSubmitTag=core.submitTag;
 
 			StructDelete(arguments, "isPrimary");
 			StructDelete(arguments, "class");
 
 			if (loc.isPrimary)
 				loc.class = ListAppend(loc.class, "btn-primary", " ");
-
-			loc.submitTag = loc.coreSubmitTag(argumentCollection=arguments);
+			
+			loc.submitTag = coreSubmitTag(argumentCollection=arguments);
 			loc.submitTag = ReplaceNoCase(loc.submitTag, '<input', '<input class="#loc.class#"');
 		</cfscript>
 		<cfreturn loc.submitTag>
@@ -69,6 +70,15 @@
 			};
 		</cfscript>
 		<cfreturn textFieldTag(argumentCollection=arguments)>
+	</cffunction>
+	
+	<cffunction name="bPasswordFieldTag" returntype="string" hint="Bootstrap markup version of the standard Wheels `passwordFieldTag` form helper.">
+		<cfscript>
+			var loc = {
+				formFieldArgs=$bootstrapFormFieldArgs(arguments)
+			};
+		</cfscript>
+		<cfreturn passwordFieldTag(argumentCollection=arguments)>
 	</cffunction>
 
 	<cffunction name="hStartFormTag" returntype="string" hint="Bootstrap markup version of the Wheels `startFormTag` form helper, except with the `form-horizontal` class applied for you.">
@@ -106,7 +116,7 @@
 			loc.hasErrors = Evaluate($objectName(argumentCollection=arguments)).hasErrors(arguments.property);
 
 			loc.field =
-				'<div class="control-group #loc.hasErrors ? 'error': ''#">
+				'<div class="control-group #Iif(loc.hasErrors, de('error'), de(''))#">
 					<label class="control-label"></label>
 					<div class="controls">
 						#loc.field#
@@ -282,8 +292,8 @@
 
 			if (loc.hasPrependedText || loc.hasAppendedText)
 			{
-				loc.prependClass = loc.hasPrependedText ? 'input-prepend' : '';
-				loc.appendClass = loc.hasAppendedText ? 'input-append' : '';
+				loc.prependClass = Iif(loc.hasPrependedText, de('input-prepend'), de(''));
+				loc.appendClass = Iif(loc.hasAppendedText, de('input-append'), de(''));
 				arguments.fieldArgs.prepend &= '<div class="#loc.prependClass# #loc.appendClass#">';
 				arguments.fieldArgs.append = '</div>' & arguments.fieldArgs.append;
 
